@@ -10,12 +10,139 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// Defines values for SeatBookingStatus.
+const (
+	SeatBookingStatusБронируется SeatBookingStatus = "Бронируется"
+
+	SeatBookingStatusЗабранировано SeatBookingStatus = "Забранировано"
+
+	SeatBookingStatusСвободно SeatBookingStatus = "Свободно"
+)
+
+// Defines values for SeatPosition.
+const (
+	SeatPositionПосередине SeatPosition = "Посередине"
+
+	SeatPositionУОкна SeatPosition = "У окна"
+
+	SeatPositionУПрохода SeatPosition = "У прохода"
+)
+
+// Defines values for SeatType.
+const (
+	SeatTypeBuisness SeatType = "Buisness"
+
+	SeatTypeEconomy SeatType = "Economy"
+)
+
+// Airport defines model for Airport.
+type Airport struct {
+	// Город аэропорта.
+	City string `json:"city"`
+
+	// Код аэропорта.
+	Code string `json:"code"`
+
+	// Страна аэропорта.
+	Country string `json:"country"`
+
+	// Описание аэропорта.
+	Description *string `json:"description,omitempty"`
+
+	// Идентификатор аэропорта.
+	Id string `json:"id"`
+
+	// Название аэропорта.
+	Name string `json:"name"`
+}
+
+// AirportsList defines model for AirportsList.
+type AirportsList []Airport
+
+// Flight defines model for Flight.
+type Flight struct {
+	// Код рейса.
+	Code string `json:"code"`
+
+	// Время вылета.
+	From string `json:"from"`
+
+	// Идентификатор аэропорта вылета.
+	FromAirportId string `json:"from_airport_id"`
+
+	// Идентификатор рейса.
+	Id string `json:"id"`
+
+	// Статус.
+	Status string `json:"status"`
+
+	// Время прилёта.
+	To string `json:"to"`
+
+	// Идентификатор аэропорта прилёта.
+	ToAirportId string `json:"to_airport_id"`
+}
+
+// FlightsList defines model for FlightsList.
+type FlightsList []Flight
+
+// Seat defines model for Seat.
+type Seat struct {
+	// Статус бронирования места.
+	BookingStatus *SeatBookingStatus `json:"booking_status,omitempty"`
+
+	// Код места.
+	Code *string `json:"code,omitempty"`
+
+	// Идентификатор места.
+	Id *string `json:"id,omitempty"`
+
+	// Место места.
+	Position *SeatPosition `json:"position,omitempty"`
+
+	// Цена места.
+	Price *float64 `json:"price,omitempty"`
+
+	// Тип места.
+	Type *SeatType `json:"type,omitempty"`
+}
+
+// Статус бронирования места.
+type SeatBookingStatus string
+
+// Место места.
+type SeatPosition string
+
+// Тип места.
+type SeatType string
+
+// SeatOption defines model for SeatOption.
+type SeatOption struct {
+	// Описание услуги для мета.
+	Description *string `json:"description,omitempty"`
+
+	// Идентификатор услуги для места.
+	Id *string `json:"id,omitempty"`
+
+	// Название услуги для мета.
+	Name *string `json:"name,omitempty"`
+
+	// Цена места.
+	Price *float64 `json:"price,omitempty"`
+}
+
+// SeatOptionsList defines model for SeatOptionsList.
+type SeatOptionsList []SeatOption
+
+// SeatsList defines model for SeatsList.
+type SeatsList []Seat
+
 // UserProfile defines model for UserProfile.
 type UserProfile struct {
 	// URL по которому можно получить аватар пользователя.
 	AvatarUrl string `json:"avatarUrl"`
 
-	// Идентификатор пользователя
+	// Идентификатор пользователя.
 	Id string `json:"id"`
 
 	// Логин пользователя в системе.
@@ -24,6 +151,27 @@ type UserProfile struct {
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+
+	// (GET /v1/airports)
+	GetV1Airports(w http.ResponseWriter, r *http.Request)
+
+	// (POST /v1/booking)
+	PostV1Booking(w http.ResponseWriter, r *http.Request)
+
+	// (GET /v1/flights)
+	FlightsList(w http.ResponseWriter, r *http.Request)
+
+	// (GET /v1/seat_options)
+	GetV1SeatOptions(w http.ResponseWriter, r *http.Request)
+
+	// (GET /v1/seats)
+	GetV1Seats(w http.ResponseWriter, r *http.Request)
+
+	// (GET /v1/transactions)
+	GetV1Transactions(w http.ResponseWriter, r *http.Request)
+
+	// (POST /v1/transactions)
+	PostV1Transactions(w http.ResponseWriter, r *http.Request)
 	// Информация об аутентифицированном пользователе.
 	// (GET /v1/user)
 	GetAuthUser(w http.ResponseWriter, r *http.Request)
@@ -37,6 +185,111 @@ type ServerInterfaceWrapper struct {
 }
 
 type MiddlewareFunc func(http.HandlerFunc) http.HandlerFunc
+
+// GetV1Airports operation middleware
+func (siw *ServerInterfaceWrapper) GetV1Airports(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var handler = func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetV1Airports(w, r)
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler(w, r.WithContext(ctx))
+}
+
+// PostV1Booking operation middleware
+func (siw *ServerInterfaceWrapper) PostV1Booking(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var handler = func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.PostV1Booking(w, r)
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler(w, r.WithContext(ctx))
+}
+
+// FlightsList operation middleware
+func (siw *ServerInterfaceWrapper) FlightsList(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var handler = func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.FlightsList(w, r)
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler(w, r.WithContext(ctx))
+}
+
+// GetV1SeatOptions operation middleware
+func (siw *ServerInterfaceWrapper) GetV1SeatOptions(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var handler = func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetV1SeatOptions(w, r)
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler(w, r.WithContext(ctx))
+}
+
+// GetV1Seats operation middleware
+func (siw *ServerInterfaceWrapper) GetV1Seats(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var handler = func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetV1Seats(w, r)
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler(w, r.WithContext(ctx))
+}
+
+// GetV1Transactions operation middleware
+func (siw *ServerInterfaceWrapper) GetV1Transactions(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var handler = func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetV1Transactions(w, r)
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler(w, r.WithContext(ctx))
+}
+
+// PostV1Transactions operation middleware
+func (siw *ServerInterfaceWrapper) PostV1Transactions(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var handler = func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.PostV1Transactions(w, r)
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler(w, r.WithContext(ctx))
+}
 
 // GetAuthUser operation middleware
 func (siw *ServerInterfaceWrapper) GetAuthUser(w http.ResponseWriter, r *http.Request) {
@@ -166,6 +419,27 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		ErrorHandlerFunc:   options.ErrorHandlerFunc,
 	}
 
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/v1/airports", wrapper.GetV1Airports)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/v1/booking", wrapper.PostV1Booking)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/v1/flights", wrapper.FlightsList)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/v1/seat_options", wrapper.GetV1SeatOptions)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/v1/seats", wrapper.GetV1Seats)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/v1/transactions", wrapper.GetV1Transactions)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/v1/transactions", wrapper.PostV1Transactions)
+	})
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/v1/user", wrapper.GetAuthUser)
 	})

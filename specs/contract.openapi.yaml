@@ -4,12 +4,13 @@ info:
   description: Homework
   version: 1.0.0
 servers:
-  - url: 'https'
+  - url: http://localhost:8080/api
+    description: local dev server
 paths:
   /v1/user:
     get:
       tags:
-        - access
+        - users
       operationId: getAuthUser
       summary: Информация об аутентифицированном пользователе.
       description: Информация об аутентифицированном пользователе.
@@ -19,8 +20,91 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserProfile"
-
+                $ref: '#/components/schemas/UserProfile'
+  /v1/flights:
+    summary: flights CRUD
+    get:
+      tags: [ flights ]
+      summary: ''
+      description: ''
+      operationId: flightsList
+      responses:
+        default:
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightsList'
+  /v1/airports:
+    summary: airports CRUD
+    get:
+      tags: [ airports ]
+      summary: ''
+      description: ''
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AirportsList'
+  /v1/seats:
+    summary: seats CRUD
+    get:
+      tags: [ seats ]
+      summary: ''
+      description: ''
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatsList'
+  /v1/seat_options:
+    summary: seat_options CRUD
+    get:
+      tags: [ seat_options ]
+      summary: ''
+      description: ''
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatOptionsList'
+  /v1/booking:
+    summary: booking CRUD
+    post:
+      tags: [ booking ]
+      summary: ''
+      description: ''
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+  /v1/transactions:
+    summary: seat_options CRUD
+    get:
+      tags: [ transactions ]
+      summary: ''
+      description: ''
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+    post:
+      tags: [ transactions ]
+      summary: ''
+      description: ''
+      operationId: ''
+      responses:
+        default:
+          description: Default response
 components:
   schemas:
     UserProfile:
@@ -32,7 +116,7 @@ components:
       properties:
         id:
           type: string
-          description: Идентификатор пользователя
+          description: Идентификатор пользователя.
           format: uuid
         login:
           type: string
@@ -42,3 +126,163 @@ components:
           type: string
           description: URL по которому можно получить аватар пользователя.
           example: https://i.pravatar.cc/150
+    Flight:
+      type: object
+      required:
+        - id
+        - code
+        - from_airport_id
+        - from
+        - to_airport_id
+        - to
+        - status
+      properties:
+        id:
+          type: string
+          description: Идентификатор рейса.
+          format: uuid
+        code:
+          type: string
+          description: Код рейса.
+          example: TTH001
+        from_airport_id:
+          type: string
+          description: Идентификатор аэропорта вылета.
+          format: uuid
+        from:
+          type: string
+          format: datetime
+          description: Время вылета.
+          example: '2022-11-09T13:59:50+03:00'
+        to_airport_id:
+          type: string
+          description: Идентификатор аэропорта прилёта.
+          format: uuid
+        to:
+          type: string
+          format: datetime
+          description: Время прилёта.
+          example: '2022-11-09T13:59:50+03:00'
+        status:
+          type: string
+          description: Статус.
+          example: available
+    FlightsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Flight'
+    Airport:
+      type: object
+      required:
+        - id
+        - code
+        - name
+        - country
+        - city
+      properties:
+        id:
+          type: string
+          description: Идентификатор аэропорта.
+          format: uuid
+        code:
+          type: string
+          description: Код аэропорта.
+          example: SVO
+        name:
+          type: string
+          description: Название аэропорта.
+          example: Шереметьевов
+        description:
+          type: string
+          description: Описание аэропорта.
+          example: HKG
+        country:
+          type: string
+          description: Страна аэропорта.
+          example: Российская Федерация
+        city:
+          type: string
+          description: Город аэропорта.
+          example: Химки
+    AirportsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Airport'
+    Seat:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор места.
+          format: uuid
+        code:
+          type: string
+          description: Код места.
+          example: SVO
+        position:
+          type: string
+          description: Место места.
+          example: У окна
+          enum:
+            - У окна
+            - У прохода
+            - Посередине
+          default: Посередине
+        price:
+          type: number
+          description: Цена места.
+          format: double
+          example: 123.45
+        booking_status:
+          type: string
+          description: Статус бронирования места.
+          example: Забранировано
+          enum:
+            - Свободно
+            - Бронируется
+            - Забранировано
+          default: Свободно
+        type:
+          type: string
+          description: Тип места.
+          example: Buisness
+          enum:
+            - Economy
+            - Buisness
+          default: Economy
+    SeatsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Seat'
+    SeatOption:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор услуги для места.
+          format: uuid
+        name:
+          type: string
+          description: Название услуги для мета.
+          example: Стандартный обед
+        description:
+          type: string
+          description: Описание услуги для мета.
+          example: Описание обеда
+        price:
+          type: number
+          description: Цена места.
+          format: double
+          example: 123.45
+    SeatOptionsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/SeatOption'
+tags:
+  - name: users
+  - name: flights
+  - name: seats
+  - name: seat_options
+  - name: booking
+  - name: payments
+  - name: transactions
