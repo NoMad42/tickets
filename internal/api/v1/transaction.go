@@ -12,7 +12,10 @@ func (a apiServer) CreateTransaction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	w.Write(newTransactionUuid)
+	_, err = w.Write(newTransactionUuid)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (a apiServer) GetTransactionsList(w http.ResponseWriter, r *http.Request) {

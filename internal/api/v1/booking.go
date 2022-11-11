@@ -12,7 +12,10 @@ func (a apiServer) CreateBooking(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	w.Write(newBookingUuid)
+	_, err = w.Write(newBookingUuid)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (a apiServer) GetBookingList(w http.ResponseWriter, r *http.Request) {
