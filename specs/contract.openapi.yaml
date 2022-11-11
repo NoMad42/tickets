@@ -118,7 +118,7 @@ paths:
         - transactions
       summary: Получить список транзакций.
       description: Получить список транзакций.
-      operationId: ''
+      operationId: getTransactionsList
       responses:
         200:
           description: Успешный ответ.
@@ -131,7 +131,7 @@ paths:
         - transactions
       summary: Создать транзакцию.
       description: Создать транзакцию.
-      operationId: ''
+      operationId: createTransaction
       responses:
         200:
           description: Успешный ответ.

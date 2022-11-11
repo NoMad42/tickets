@@ -226,10 +226,10 @@ type ServerInterface interface {
 	GetSeatsList(w http.ResponseWriter, r *http.Request)
 	// Получить список транзакций.
 	// (GET /v1/transactions)
-	GetV1Transactions(w http.ResponseWriter, r *http.Request)
+	GetTransactionsList(w http.ResponseWriter, r *http.Request)
 	// Создать транзакцию.
 	// (POST /v1/transactions)
-	PostV1Transactions(w http.ResponseWriter, r *http.Request)
+	CreateTransaction(w http.ResponseWriter, r *http.Request)
 	// Информация об аутентифицированном пользователе.
 	// (GET /v1/user)
 	GetAuthUser(w http.ResponseWriter, r *http.Request)
@@ -334,12 +334,12 @@ func (siw *ServerInterfaceWrapper) GetSeatsList(w http.ResponseWriter, r *http.R
 	handler(w, r.WithContext(ctx))
 }
 
-// GetV1Transactions operation middleware
-func (siw *ServerInterfaceWrapper) GetV1Transactions(w http.ResponseWriter, r *http.Request) {
+// GetTransactionsList operation middleware
+func (siw *ServerInterfaceWrapper) GetTransactionsList(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetV1Transactions(w, r)
+		siw.Handler.GetTransactionsList(w, r)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -349,12 +349,12 @@ func (siw *ServerInterfaceWrapper) GetV1Transactions(w http.ResponseWriter, r *h
 	handler(w, r.WithContext(ctx))
 }
 
-// PostV1Transactions operation middleware
-func (siw *ServerInterfaceWrapper) PostV1Transactions(w http.ResponseWriter, r *http.Request) {
+// CreateTransaction operation middleware
+func (siw *ServerInterfaceWrapper) CreateTransaction(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.PostV1Transactions(w, r)
+		siw.Handler.CreateTransaction(w, r)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -511,10 +511,10 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Get(options.BaseURL+"/v1/seats", wrapper.GetSeatsList)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/v1/transactions", wrapper.GetV1Transactions)
+		r.Get(options.BaseURL+"/v1/transactions", wrapper.GetTransactionsList)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/v1/transactions", wrapper.PostV1Transactions)
+		r.Post(options.BaseURL+"/v1/transactions", wrapper.CreateTransaction)
 	})
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/v1/user", wrapper.GetAuthUser)
