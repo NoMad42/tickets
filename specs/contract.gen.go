@@ -13,20 +13,11 @@ import (
 
 // Defines values for BookingStatus.
 const (
-	BookingStatusBooked BookingStatus = "Booked"
+	BookingStatusBooked BookingStatus = "booked"
 
-	BookingStatusPending BookingStatus = "Pending"
+	BookingStatusBooking BookingStatus = "booking"
 
-	BookingStatusWaitForPayment BookingStatus = "Wait for payment"
-)
-
-// Defines values for SeatBookingStatus.
-const (
-	SeatBookingStatusBooked SeatBookingStatus = "booked"
-
-	SeatBookingStatusBooking SeatBookingStatus = "booking"
-
-	SeatBookingStatusFree SeatBookingStatus = "free"
+	BookingStatusFree BookingStatus = "free"
 )
 
 // Defines values for SeatPosition.
@@ -40,9 +31,9 @@ const (
 
 // Defines values for SeatType.
 const (
-	SeatTypeBuisness SeatType = "Buisness"
+	SeatTypeBuisness SeatType = "buisness"
 
-	SeatTypeEconomy SeatType = "Economy"
+	SeatTypeEconomy SeatType = "economy"
 )
 
 // Airport defines model for Airport.
@@ -93,11 +84,11 @@ type Booking struct {
 	UserProfileId string `json:"user_profile_id"`
 }
 
-// Статус бронирования.
-type BookingStatus string
-
 // BookingList defines model for BookingList.
 type BookingList []Booking
+
+// Статус бронирования.
+type BookingStatus string
 
 // Flight defines model for Flight.
 type Flight struct {
@@ -128,8 +119,7 @@ type FlightsList []Flight
 
 // Seat defines model for Seat.
 type Seat struct {
-	// Статус бронирования места.
-	BookingStatus SeatBookingStatus `json:"booking_status"`
+	BookingStatus interface{} `json:"booking_status"`
 
 	// Код места.
 	Code string `json:"code"`
@@ -146,9 +136,6 @@ type Seat struct {
 	// Тип места.
 	Type SeatType `json:"type"`
 }
-
-// Статус бронирования места.
-type SeatBookingStatus string
 
 // Место места.
 type SeatPosition string

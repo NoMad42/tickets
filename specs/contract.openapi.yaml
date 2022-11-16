@@ -277,14 +277,7 @@ components:
           format: double
           example: 123.45
         booking_status:
-          type: string
-          description: Статус бронирования места.
-          example: booked
-          enum:
-            - free # Свободно
-            - booking # Бронируется
-            - booked # Забранировано
-          default: free
+          $ref: #/components/schemas/BookingStatus'
         type:
           type: string
           description: Тип места.
@@ -361,14 +354,16 @@ components:
           description: Идентификатор пользователя.
           format: uuid
         status:
-          type: string
-          description: Статус бронирования.
-          enum:
-            - Pending
-            - Wait for payment
-            - Booked
-          example: Booked
-          default: Pending
+          $ref: '#/components/schemas/BookingStatus'
+    BookingStatus:
+      type: string
+      description: Статус бронирования.
+      enum: 
+        - free
+        - booking
+        - booked
+      example: booking
+      default: free
     BookingList:
       type: array
       items:
