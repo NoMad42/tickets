@@ -267,9 +267,9 @@ components:
           description: Место места.
           example: window
           enum:
-            - window # У окна
-            - aisle # У прохода
             - middle # Посередине
+            - aisle # У прохода
+            - window # У окна
           default: middle
         price:
           type: number
@@ -290,8 +290,8 @@ components:
           description: Тип места.
           example: Buisness
           enum:
-            - Economy
-            - Buisness
+            - economy
+            - buisness
           default: Economy
     SeatsList:
       type: array
