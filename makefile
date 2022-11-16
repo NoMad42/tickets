@@ -1,6 +1,7 @@
 GOCMD=go
 GOTEST=$(GOCMD) test
 BINARY_NAME=main.out
+DB_URL=postgres://root:pass@localhost:5432/digdb?sslmode=disable
 
 GREEN  := $(shell tput -Txterm setaf 2)
 YELLOW := $(shell tput -Txterm setaf 3)
@@ -34,5 +35,18 @@ run:
 	&& ./${BINARY_NAME}
  
 clean:
-	go clean
-	rm ${BINARY_NAME}
+	cd cmd/app \
+	&& go clean \
+	&& rm ${BINARY_NAME}
+
+migrate-up:
+	migrate -source file://migrations/postgresql -database "${DB_URL}" up
+
+migrate-down:
+	migrate -source file://migrations/postgresql -database "${DB_URL}" down
+
+migrate-seeds-up:
+	migrate -source file://migrations/postgresql/seeds -database "${DB_URL}" up
+
+migrate-seeds-down:
+	migrate -source file://migrations/postgresql/seeds -database "${DB_URL}" down
