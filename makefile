@@ -44,9 +44,3 @@ migrate-up:
 
 migrate-down:
 	migrate -source file://migrations/postgresql -database "${DB_URL}" down
-
-migrate-seeds-up:
-	migrate -source file://migrations/postgresql/seeds -database "${DB_URL}" up
-
-migrate-seeds-down:
-	migrate -source file://migrations/postgresql/seeds -database "${DB_URL}" down
