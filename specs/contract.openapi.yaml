@@ -4,23 +4,143 @@ info:
   description: Homework
   version: 1.0.0
 servers:
-  - url: 'https'
+  - url: http://localhost:8080/api
+    description: local dev server
 paths:
   /v1/user:
     get:
       tags:
-        - access
+        - users
       operationId: getAuthUser
       summary: Информация об аутентифицированном пользователе.
       description: Информация об аутентифицированном пользователе.
       responses:
-        '200':
+        200:
           description: Успешный ответ.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserProfile"
-
+                $ref: '#/components/schemas/UserProfile'
+  /v1/flights:
+    summary: flights CRUD
+    get:
+      tags:
+        - flights
+      summary: Получить список рейсов.
+      description: Получить список рейсов.
+      operationId: getFlightsList
+      responses:
+        200:
+          description: Успешный ответ.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightsList'
+  /v1/airports:
+    summary: airports CRUD
+    get:
+      tags:
+        - airports
+      summary: Получить список аэропортов.
+      description: Получить список аэропортов.
+      operationId: getAirportsList
+      responses:
+        200:
+          description: Успешный ответ.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AirportsList'
+  /v1/seats:
+    summary: seats CRUD
+    get:
+      tags:
+        - seats
+      summary: Получить список мест.
+      description: Получить список мест.
+      operationId: getSeatsList
+      responses:
+        200:
+          description: Успешный ответ.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatsList'
+  /v1/seat_options:
+    summary: seat_options CRUD
+    get:
+      tags:
+        - seat_options
+      summary: Получить список услуг для места.
+      description: Получить список услуг для места.
+      operationId: getSeatOptionsList
+      responses:
+        200:
+          description: Успешный ответ.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeatOptionsList'
+  /v1/booking:
+    summary: booking CRUD
+    post:
+      tags:
+        - booking
+      summary: Создать заявку на бронирования
+      description: Создать заявку на бронирования
+      operationId: createBooking
+      responses:
+        200:
+          description: Успешный ответ.
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Идентификатор созданной заявки.
+                format: uuid
+    get:
+      summary: Получить список заявок на бронирование.
+      description: Получить список заявок на бронирование.
+      operationId: getBookingList
+      responses:
+        200:
+          description: Успешный ответ.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingList'
+      tags:
+        - booking
+  /v1/transactions:
+    summary: seat_options CRUD
+    get:
+      tags:
+        - transactions
+      summary: Получить список транзакций.
+      description: Получить список транзакций.
+      operationId: getTransactionsList
+      responses:
+        200:
+          description: Успешный ответ.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsList'
+    post:
+      tags:
+        - transactions
+      summary: Создать транзакцию.
+      description: Создать транзакцию.
+      operationId: createTransaction
+      responses:
+        200:
+          description: Успешный ответ.
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Идентификатор созданной транзакции.
+                format: uuid
 components:
   schemas:
     UserProfile:
@@ -32,7 +152,7 @@ components:
       properties:
         id:
           type: string
-          description: Идентификатор пользователя
+          description: Идентификатор пользователя.
           format: uuid
         login:
           type: string
@@ -42,3 +162,242 @@ components:
           type: string
           description: URL по которому можно получить аватар пользователя.
           example: https://i.pravatar.cc/150
+    Flight:
+      type: object
+      required:
+        - id
+        - code
+        - from_airport_id
+        - from
+        - to_airport_id
+        - to
+        - status
+      properties:
+        id:
+          type: string
+          description: Идентификатор рейса.
+          format: uuid
+        code:
+          type: string
+          description: Код рейса.
+          example: TTH001
+        from_airport_id:
+          type: string
+          description: Идентификатор аэропорта вылета.
+          format: uuid
+        from:
+          type: string
+          format: date-time
+          description: Время вылета.
+          example: '2022-11-09T13:59:50+03:00'
+        to_airport_id:
+          type: string
+          description: Идентификатор аэропорта прилёта.
+          format: uuid
+        to:
+          type: string
+          format: date-time
+          description: Время прилёта.
+          example: '2022-11-09T13:59:50+03:00'
+        status:
+          type: string
+          description: Статус.
+          example: available
+    FlightsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Flight'
+    Airport:
+      type: object
+      required:
+        - id
+        - code
+        - name
+        - country
+        - city
+      properties:
+        id:
+          type: string
+          description: Идентификатор аэропорта.
+          format: uuid
+        code:
+          type: string
+          description: Код аэропорта.
+          example: SVO
+        name:
+          type: string
+          description: Название аэропорта.
+          example: Шереметьевов
+        description:
+          type: string
+          description: Описание аэропорта.
+          example: HKG
+        country:
+          type: string
+          description: Страна аэропорта.
+          example: Российская Федерация
+        city:
+          type: string
+          description: Город аэропорта.
+          example: Химки
+    AirportsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Airport'
+    Seat:
+      type: object
+      required:
+        - id
+        - code
+        - position
+        - price
+        - booking_status
+        - type
+      properties:
+        id:
+          type: string
+          description: Идентификатор места.
+          format: uuid
+        code:
+          type: string
+          description: Код места.
+          example: SVO
+        position:
+          type: string
+          description: Место места.
+          example: window
+          enum:
+            - middle # Посередине
+            - aisle # У прохода
+            - window # У окна
+          default: middle
+        price:
+          type: number
+          description: Цена места.
+          format: double
+          example: 123.45
+        booking_status:
+          $ref: #/components/schemas/BookingStatus'
+        type:
+          type: string
+          description: Тип места.
+          example: Buisness
+          enum:
+            - economy
+            - buisness
+          default: Economy
+    SeatsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Seat'
+    SeatOption:
+      type: object
+      required:
+        - id
+        - name
+        - price
+      properties:
+        id:
+          type: string
+          description: Идентификатор услуги для места.
+          format: uuid
+        name:
+          type: string
+          description: Название услуги для мета.
+          example: Стандартный обед
+        description:
+          type: string
+          description: Описание услуги для мета.
+          example: Описание обеда
+        price:
+          type: number
+          description: Цена места.
+          format: double
+          example: 123.45
+    SeatOptionsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/SeatOption'
+    Booking:
+      type: object
+      required:
+        - id
+        - flight_id
+        - seat_id
+        - user_profile_id
+      properties:
+        id:
+          type: string
+          description: Идентификатор услуги для места.
+          format: uuid
+        flight_id:
+          type: string
+          description: Идентификатор рейса.
+          format: uuid
+        seat_id:
+          type: string
+          description: Идентификатор места.
+          format: uuid
+        seat_options_ids:
+          type: array
+          description: Идентификаторы услуг для места
+          items:
+            type: string
+            description: Идентификатор услуги для места
+            format: uuid
+        transaction_id:
+          type: string
+          description: Идентификатор транзакции.
+          format: uuid
+        user_profile_id:
+          type: string
+          description: Идентификатор пользователя.
+          format: uuid
+        status:
+          $ref: '#/components/schemas/BookingStatus'
+    BookingStatus:
+      type: string
+      description: Статус бронирования.
+      enum: 
+        - free
+        - booking
+        - booked
+      example: booking
+      default: free
+    BookingList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Booking'
+    Transaction:
+      type: object
+      required:
+        - id
+        - amount
+        - user_profile_id
+      properties:
+        id:
+          type: string
+          description: Идентификатор транзакции.
+          format: uuid
+        amount:
+          type: number
+          description: Сумма.
+          format: double
+          example: 123.45
+        timestamp:
+          type: string
+          description: Время оплаты.
+          format: date-time
+          example: "2022-11-09T13:59:50+03:00"
+    TransactionsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Transaction'
+tags:
+  - name: users
+  - name: flights
+  - name: seats
+  - name: seat_options
+  - name: booking
+  - name: payments
+  - name: transactions
