@@ -15,7 +15,9 @@ import (
 	v1 "homework/internal/api/v1"
 	"homework/internal/config"
 	airportsService "homework/internal/service/airports"
+	flightsService "homework/internal/service/flights"
 	airportsStorage "homework/internal/storage/postgresql/airports"
+	flightsStorage "homework/internal/storage/postgresql/flights"
 	"homework/specs"
 )
 
@@ -47,11 +49,16 @@ func main() {
 
 	// инициализация хранилищ
 	airportsStorage := airportsStorage.NewAirportsStorage(dbpool)
+	flightsStorage := flightsStorage.NewFlightsStorage(dbpool)
 
 	// инициализация сервисов
 	airportsService := airportsService.NewAirportsService(airportsStorage)
+	flightsService := flightsService.NewFlightsService(flightsStorage)
 
-	apiServer := v1.NewAPIServer(airportsService)
+	apiServer := v1.NewAPIServer(
+		airportsService,
+		flightsService,
+	)
 
 	err = startHTTPServer(ctx, cfg, apiServer)
 	if err != nil {
