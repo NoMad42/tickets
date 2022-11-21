@@ -1,8 +1,5 @@
 package airports
 
-// AirportsList defines model for AirportsList.
-type AirportsList []Airport
-
 // Airport defines model for Airport.
 type Airport struct {
 	// Город аэропорта.
@@ -23,3 +20,6 @@ type Airport struct {
 	// Название аэропорта.
 	Name string `json:"name"`
 }
+
+// AirportsList defines model for AirportsList.
+type AirportsList []Airport
