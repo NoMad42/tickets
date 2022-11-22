@@ -1,7 +1,10 @@
 package v1
 
 import (
+	"encoding/json"
 	"homework/specs"
+	"log"
+	"net/http"
 
 	airportsService "homework/internal/service/airports"
 	flightsService "homework/internal/service/flights"
@@ -22,5 +25,14 @@ func NewAPIServer(
 	return &apiServer{
 		airportsService: airportsService,
 		flightsService:  flightsService,
+	}
+}
+
+func (a *apiServer) writeSuccessResponse(result any, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	if err := json.NewEncoder(w).Encode(result); err != nil {
+		log.Fatal(err)
 	}
 }

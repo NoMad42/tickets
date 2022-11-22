@@ -9,10 +9,10 @@ type Flight struct {
 	Code string `json:"code"`
 
 	// Время вылета.
-	From_timestamp time.Time `json:"from"`
+	From time.Time `json:"from" db:"from_timestamp"`
 
 	// Идентификатор аэропорта вылета.
-	From_airport_id string `json:"from_airport_id"`
+	FromAirportId string `json:"from_airport_id" db:"from_airport_id"`
 
 	// Идентификатор рейса.
 	Id string `json:"id"`
@@ -21,10 +21,10 @@ type Flight struct {
 	Status string `json:"status"`
 
 	// Время прилёта.
-	To_timestamp time.Time `json:"to"`
+	To time.Time `json:"to" db:"to_timestamp"`
 
 	// Идентификатор аэропорта прилёта.
-	To_airport_id string `json:"to_airport_id"`
+	ToAirportId string `json:"to_airport_id" db:"to_airport_id"`
 }
 
 // FlightsList defines model for FlightsList.
