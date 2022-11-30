@@ -17,9 +17,11 @@ import (
 	airportsService "homework/internal/service/airports"
 	bookingService "homework/internal/service/booking"
 	flightsService "homework/internal/service/flights"
+	transactionsService "homework/internal/service/transactions"
 	airportsStorage "homework/internal/storage/postgresql/airports"
 	bookingStorage "homework/internal/storage/postgresql/booking"
 	flightsStorage "homework/internal/storage/postgresql/flights"
+	transactionsStorage "homework/internal/storage/postgresql/transactions"
 	"homework/specs"
 )
 
@@ -53,16 +55,19 @@ func main() {
 	airportsStorage := airportsStorage.NewAirportsStorage(dbpool)
 	bookingStorage := bookingStorage.NewBookingStorage(dbpool)
 	flightsStorage := flightsStorage.NewFlightsStorage(dbpool)
+	transactionsStorage := transactionsStorage.NewTransactionsStorage(dbpool)
 
 	// инициализация сервисов
 	airportsService := airportsService.NewAirportsService(airportsStorage)
 	bookingService := bookingService.NewBookingService(bookingStorage)
 	flightsService := flightsService.NewFlightsService(flightsStorage)
+	transactionsService := transactionsService.NewTransactionsService(transactionsStorage)
 
 	apiServer := v1.NewAPIServer(
 		airportsService,
 		bookingService,
 		flightsService,
+		transactionsService,
 	)
 
 	err = startHTTPServer(ctx, cfg, apiServer)

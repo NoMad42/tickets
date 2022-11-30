@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"log"
 	"net/http"
 
@@ -19,5 +20,6 @@ func (a apiServer) CreateTransaction(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a apiServer) GetTransactionsList(w http.ResponseWriter, r *http.Request) {
-	// implement me
+	t, _ := a.transactionsService.GetTransactionsList(context.Background())
+	a.writeSuccessResponse(t, w)
 }
