@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"log"
 	"net/http"
 
@@ -19,5 +20,6 @@ func (a apiServer) CreateBooking(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a apiServer) GetBookingList(w http.ResponseWriter, r *http.Request) {
-	// implement me
+	bl, _ := a.bookingService.GetBookingList(context.Background())
+	a.writeSuccessResponse(bl, w)
 }

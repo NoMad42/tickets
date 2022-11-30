@@ -15,8 +15,10 @@ import (
 	v1 "homework/internal/api/v1"
 	"homework/internal/config"
 	airportsService "homework/internal/service/airports"
+	bookingService "homework/internal/service/booking"
 	flightsService "homework/internal/service/flights"
 	airportsStorage "homework/internal/storage/postgresql/airports"
+	bookingStorage "homework/internal/storage/postgresql/booking"
 	flightsStorage "homework/internal/storage/postgresql/flights"
 	"homework/specs"
 )
@@ -49,14 +51,17 @@ func main() {
 
 	// инициализация хранилищ
 	airportsStorage := airportsStorage.NewAirportsStorage(dbpool)
+	bookingStorage := bookingStorage.NewBookingStorage(dbpool)
 	flightsStorage := flightsStorage.NewFlightsStorage(dbpool)
 
 	// инициализация сервисов
 	airportsService := airportsService.NewAirportsService(airportsStorage)
+	bookingService := bookingService.NewBookingService(bookingStorage)
 	flightsService := flightsService.NewFlightsService(flightsStorage)
 
 	apiServer := v1.NewAPIServer(
 		airportsService,
+		bookingService,
 		flightsService,
 	)
 

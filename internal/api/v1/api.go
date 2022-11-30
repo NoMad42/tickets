@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	airportsService "homework/internal/service/airports"
+	bookingService "homework/internal/service/booking"
 	flightsService "homework/internal/service/flights"
 )
 
@@ -15,15 +16,18 @@ var _ specs.ServerInterface = &apiServer{}
 
 type apiServer struct {
 	airportsService airportsService.AirportsService
+	bookingService  bookingService.BookingService
 	flightsService  flightsService.FlightsService
 }
 
 func NewAPIServer(
 	airportsService airportsService.AirportsService,
+	bookingService bookingService.BookingService,
 	flightsService flightsService.FlightsService,
 ) specs.ServerInterface {
 	return &apiServer{
 		airportsService: airportsService,
+		bookingService:  bookingService,
 		flightsService:  flightsService,
 	}
 }
