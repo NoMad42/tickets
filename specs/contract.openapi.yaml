@@ -277,7 +277,7 @@ components:
           format: double
           example: 123.45
         booking_status:
-          $ref: #/components/schemas/BookingStatus'
+          $ref: '#/components/schemas/BookingStatus'
         type:
           type: string
           description: Тип места.
@@ -285,7 +285,7 @@ components:
           enum:
             - economy
             - buisness
-          default: Economy
+          default: economy
     SeatsList:
       type: array
       items:

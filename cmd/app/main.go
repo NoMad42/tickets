@@ -9,10 +9,15 @@ import (
 	"syscall"
 
 	"github.com/go-chi/chi"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/sync/errgroup"
 
 	v1 "homework/internal/api/v1"
 	"homework/internal/config"
+	airportsService "homework/internal/service/airports"
+	flightsService "homework/internal/service/flights"
+	airportsStorage "homework/internal/storage/postgresql/airports"
+	flightsStorage "homework/internal/storage/postgresql/flights"
 	"homework/specs"
 )
 
@@ -35,7 +40,25 @@ func main() {
 		return
 	}
 
-	apiServer := v1.NewAPIServer()
+	dbpool, err := pgxpool.New(context.Background(), cfg.Db.Postgresql)
+	if err != nil {
+		log.Fatalf("Unable to create connection pool: %v\n", err)
+		os.Exit(1)
+	}
+	defer dbpool.Close()
+
+	// инициализация хранилищ
+	airportsStorage := airportsStorage.NewAirportsStorage(dbpool)
+	flightsStorage := flightsStorage.NewFlightsStorage(dbpool)
+
+	// инициализация сервисов
+	airportsService := airportsService.NewAirportsService(airportsStorage)
+	flightsService := flightsService.NewFlightsService(flightsStorage)
+
+	apiServer := v1.NewAPIServer(
+		airportsService,
+		flightsService,
+	)
 
 	err = startHTTPServer(ctx, cfg, apiServer)
 	if err != nil {

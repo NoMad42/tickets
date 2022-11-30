@@ -119,7 +119,8 @@ type FlightsList []Flight
 
 // Seat defines model for Seat.
 type Seat struct {
-	BookingStatus interface{} `json:"booking_status"`
+	// Статус бронирования.
+	BookingStatus BookingStatus `json:"booking_status"`
 
 	// Код места.
 	Code string `json:"code"`

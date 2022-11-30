@@ -1,1 +1,2 @@
 cmd/app/main.out
+migrations/postgresql/seeds/*
