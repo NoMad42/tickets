@@ -7,24 +7,36 @@ import (
 	"net/http"
 
 	airportsService "homework/internal/service/airports"
+	bookingService "homework/internal/service/booking"
 	flightsService "homework/internal/service/flights"
+	seatsService "homework/internal/service/seats"
+	transactionsService "homework/internal/service/transactions"
 )
 
 // Быстрая проверка актуальности текущего интерфейса сервера.
 var _ specs.ServerInterface = &apiServer{}
 
 type apiServer struct {
-	airportsService airportsService.AirportsService
-	flightsService  flightsService.FlightsService
+	airportsService     airportsService.AirportsService
+	bookingService      bookingService.BookingService
+	flightsService      flightsService.FlightsService
+	seatsService        seatsService.SeatsService
+	transactionsService transactionsService.TransactionsService
 }
 
 func NewAPIServer(
 	airportsService airportsService.AirportsService,
+	bookingService bookingService.BookingService,
 	flightsService flightsService.FlightsService,
+	seatsService seatsService.SeatsService,
+	transactionsService transactionsService.TransactionsService,
 ) specs.ServerInterface {
 	return &apiServer{
-		airportsService: airportsService,
-		flightsService:  flightsService,
+		airportsService:     airportsService,
+		bookingService:      bookingService,
+		flightsService:      flightsService,
+		seatsService:        seatsService,
+		transactionsService: transactionsService,
 	}
 }
 

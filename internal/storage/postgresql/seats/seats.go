@@ -1,0 +1,39 @@
+package seats
+
+import (
+	"context"
+	"log"
+
+	"homework/internal/domain/seats"
+
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+type SeatsStorage interface {
+	GetSeatsList(context.Context) (seats.SeatsList, error)
+}
+
+type storage struct {
+	dbp *pgxpool.Pool
+}
+
+func (s storage) GetSeatsList(ctx context.Context) (seats.SeatsList, error) {
+	rows, _ := s.dbp.Query(context.Background(), "select * from seats limit 100")
+	defer rows.Close()
+
+	a, err := pgx.CollectRows(rows, pgx.RowToStructByName[seats.Seat])
+	if err != nil {
+		log.Printf("CollectRows error: %v", err)
+	}
+
+	return a, err
+}
+
+func NewSeatsStorage(
+	dbp *pgxpool.Pool,
+) SeatsStorage {
+	return &storage{
+		dbp: dbp,
+	}
+}
