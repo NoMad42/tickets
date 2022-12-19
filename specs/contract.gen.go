@@ -75,10 +75,19 @@ type Booking struct {
 	SeatOptionsIds *[]string `json:"seat_options_ids,omitempty"`
 
 	// Статус бронирования.
-	Status *BookingStatus `json:"status,omitempty"`
+	Status BookingStatus `json:"status"`
 
 	// Идентификатор транзакции.
 	TransactionId *string `json:"transaction_id,omitempty"`
+
+	// Идентификатор пользователя.
+	UserProfileId string `json:"user_profile_id"`
+}
+
+// Тело запроса на создание бронирования
+type BookingCreateRequest struct {
+	// Идентификатор места.
+	SeatId string `json:"seat_id"`
 
 	// Идентификатор пользователя.
 	UserProfileId string `json:"user_profile_id"`
@@ -194,6 +203,12 @@ type UserProfile struct {
 	// Логин пользователя в системе.
 	Login string `json:"login"`
 }
+
+// CreateBookingJSONBody defines parameters for CreateBooking.
+type CreateBookingJSONBody BookingCreateRequest
+
+// CreateBookingJSONRequestBody defines body for CreateBooking for application/json ContentType.
+type CreateBookingJSONRequestBody CreateBookingJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {

@@ -1,8 +1,6 @@
 package v1
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -17,13 +15,5 @@ func (a apiServer) GetAuthUser(w http.ResponseWriter, r *http.Request) {
 		Login:     "admin",
 	}
 
-	response, err := json.Marshal(user)
-	if err != nil {
-		return
-	}
-
-	_, err = w.Write(response)
-	if err != nil {
-		log.Fatal(err)
-	}
+	a.writeSuccessResponse(user, w)
 }

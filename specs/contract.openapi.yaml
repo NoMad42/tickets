@@ -89,6 +89,11 @@ paths:
       summary: Создать заявку на бронирования
       description: Создать заявку на бронирования
       operationId: createBooking
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingCreateRequest'
       responses:
         200:
           description: Успешный ответ.
@@ -330,6 +335,7 @@ components:
         - flight_id
         - seat_id
         - user_profile_id
+        - status
       properties:
         id:
           type: string
@@ -373,6 +379,22 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Booking'
+    BookingCreateRequest:
+      title: Тело запроса на создание бронирования
+      description: Тело запроса на создание бронирования
+      type: object
+      properties:
+        seat_id:
+          type: string
+          description: Идентификатор места.
+          format: uuid
+        user_profile_id:
+          type: string
+          description: Идентификатор пользователя.
+          format: uuid
+      required:
+        - seat_id
+        - user_profile_id
     Transaction:
       type: object
       required:

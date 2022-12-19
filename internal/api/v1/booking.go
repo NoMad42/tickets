@@ -2,21 +2,27 @@ package v1
 
 import (
 	"context"
+	"encoding/json"
+	"homework/specs"
 	"log"
 	"net/http"
-
-	"github.com/google/uuid"
 )
 
 func (a apiServer) CreateBooking(w http.ResponseWriter, r *http.Request) {
-	newBookingUuid, err := uuid.New().MarshalBinary()
+	var bcr specs.BookingCreateRequest
+	err := json.NewDecoder(r.Body).Decode(&bcr)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("JSON decode error: ", err)
 	}
-	_, err = w.Write(newBookingUuid)
+	defer r.Body.Close()
+
+	u, err := a.bookingService.CreateBooking(context.Background(), bcr.SeatId, bcr.UserProfileId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return
 	}
+
+	a.writeSuccessResponse(u, w)
 }
 
 func (a apiServer) GetBookingList(w http.ResponseWriter, r *http.Request) {
