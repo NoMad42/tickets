@@ -248,6 +248,7 @@ components:
       type: object
       required:
         - id
+        - flight_id
         - code
         - position
         - price
@@ -257,6 +258,10 @@ components:
         id:
           type: string
           description: Идентификатор места.
+          format: uuid
+        flight_id:
+          type: string
+          description: Идентификатор рейса.
           format: uuid
         code:
           type: string

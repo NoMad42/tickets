@@ -21,10 +21,13 @@ const (
 // Seat defines model for Seat.
 type Seat struct {
 	// Статус бронирования.
-	BookingStatus booking.BookingStatus `json:"booking_status"`
+	BookingStatus booking.BookingStatus `json:"booking_status" db:"booking_status"`
 
 	// Код места.
 	Code string `json:"code"`
+
+	// Идентификатор рейса.
+	FlightId *string `json:"flight_id,omitempty" db:"flight_id"`
 
 	// Идентификатор места.
 	Id string `json:"id"`
@@ -36,7 +39,7 @@ type Seat struct {
 	Price float64 `json:"price"`
 
 	// Тип места.
-	Type SeatType `json:"type"`
+	Type SeatType `json:"type" db:"seat_type"`
 }
 
 // Место места.

@@ -1,5 +1,6 @@
 GOCMD=go
 GOTEST=$(GOCMD) test
+BINARY_DIR=cmd/app/
 BINARY_NAME=main.out
 DB_URL=postgres://root:pass@localhost:5432/digdb?sslmode=disable
 
@@ -12,8 +13,7 @@ RESET  := $(shell tput -Txterm sgr0)
 all: build
  
 build:
-	cd cmd/app \
-	&& go build -o ${BINARY_NAME} main.go
+	go build -o ${BINARY_DIR}${BINARY_NAME} ${BINARY_DIR}main.go
 
 gen-api:
 	cd specs \
@@ -44,3 +44,15 @@ migrate-up:
 
 migrate-down:
 	migrate -source file://migrations/postgresql -database "${DB_URL}" down
+
+migrate-refresh: 
+	make migrate-down
+	make migrate-up
+
+mig-r: migrate-refresh
+
+migrate-fresh: 
+	migrate -source file://migrations/postgresql -database "${DB_URL}" drop
+	make migrate-up
+
+mig-f: migrate-fresh

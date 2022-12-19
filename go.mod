@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/go-chi/chi v1.5.4
 	github.com/go-chi/chi/v5 v5.0.7
+	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
 	github.com/jackc/pgx/v5 v5.1.1
 	golang.org/x/sync v0.1.0

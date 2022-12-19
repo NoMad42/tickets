@@ -12,6 +12,7 @@ import (
 
 type SeatsStorage interface {
 	GetSeatsList(context.Context) (seats.SeatsList, error)
+	GetSeatOptionsList(context.Context) (seats.SeatOptionsList, error)
 }
 
 type storage struct {
@@ -23,6 +24,18 @@ func (s storage) GetSeatsList(ctx context.Context) (seats.SeatsList, error) {
 	defer rows.Close()
 
 	a, err := pgx.CollectRows(rows, pgx.RowToStructByName[seats.Seat])
+	if err != nil {
+		log.Printf("CollectRows error: %v", err)
+	}
+
+	return a, err
+}
+
+func (s storage) GetSeatOptionsList(ctx context.Context) (seats.SeatOptionsList, error) {
+	rows, _ := s.dbp.Query(context.Background(), "select * from seat_options limit 100")
+	defer rows.Close()
+
+	a, err := pgx.CollectRows(rows, pgx.RowToStructByName[seats.SeatOption])
 	if err != nil {
 		log.Printf("CollectRows error: %v", err)
 	}

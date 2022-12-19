@@ -125,6 +125,9 @@ type Seat struct {
 	// Код места.
 	Code string `json:"code"`
 
+	// Идентификатор рейса.
+	FlightId string `json:"flight_id"`
+
 	// Идентификатор места.
 	Id string `json:"id"`
 
