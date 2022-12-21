@@ -50,13 +50,13 @@ type SeatType string
 
 // SeatOption defines model for SeatOption.
 type SeatOption struct {
-	// Описание услуги для мета.
+	// Описание услуги для места.
 	Description *string `json:"description,omitempty"`
 
 	// Идентификатор услуги для места.
 	Id string `json:"id"`
 
-	// Название услуги для мета.
+	// Название услуги для места.
 	Name string `json:"name"`
 
 	// Цена места.

@@ -341,11 +341,11 @@ components:
           format: uuid
         name:
           type: string
-          description: Название услуги для мета.
+          description: Название услуги для места.
           example: Стандартный обед
         description:
           type: string
-          description: Описание услуги для мета.
+          description: Описание услуги для места.
           example: Описание обеда
         price:
           type: number
