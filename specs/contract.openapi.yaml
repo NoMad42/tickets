@@ -66,6 +66,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SeatsList'
+  /v1/seats/{seatId}:
+    summary: seats CRUD entity
+    get:
+      summary: Получить место по id
+      description: Получить место по id
+      operationId: getSeatById
+      tags:
+        - seats
+      parameters: 
+        - name: seatId
+          description: Идентификатор места.
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Seat"
   /v1/seat_options:
     summary: seat_options CRUD
     get:
@@ -137,6 +160,11 @@ paths:
       summary: Создать транзакцию.
       description: Создать транзакцию.
       operationId: createTransaction
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionCreateRequest'
       responses:
         200:
           description: Успешный ответ.
@@ -329,6 +357,8 @@ components:
       items:
         $ref: '#/components/schemas/SeatOption'
     Booking:
+      title: Бронирование
+      description: Бронирование
       type: object
       required:
         - id
@@ -339,7 +369,7 @@ components:
       properties:
         id:
           type: string
-          description: Идентификатор услуги для места.
+          description: Идентификатор бронирования.
           format: uuid
         flight_id:
           type: string
@@ -376,6 +406,8 @@ components:
       example: booking
       default: free
     BookingList:
+      title: Список бронирований
+      description: Список бронирований
       type: array
       items:
         $ref: '#/components/schemas/Booking'
@@ -396,6 +428,8 @@ components:
         - seat_id
         - user_profile_id
     Transaction:
+      title: Транзакция
+      description: Транзакция
       type: object
       required:
         - id
@@ -417,9 +451,22 @@ components:
           format: date-time
           example: "2022-11-09T13:59:50+03:00"
     TransactionsList:
+      title: Список транзакций
+      description: Список транзакций
       type: array
       items:
         $ref: '#/components/schemas/Transaction'
+    TransactionCreateRequest:
+      title: Тело запроса на создание транзакции
+      description: Тело запроса на создание транзакции
+      type: object
+      properties:
+        booking_id:
+          type: string
+          description: Идентификатор бронирования.
+          format: uuid
+      required:
+        - booking_id
 tags:
   - name: users
   - name: flights

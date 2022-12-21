@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -60,12 +61,12 @@ type Airport struct {
 // AirportsList defines model for AirportsList.
 type AirportsList []Airport
 
-// Booking defines model for Booking.
+// Бронирование
 type Booking struct {
 	// Идентификатор рейса.
 	FlightId string `json:"flight_id"`
 
-	// Идентификатор услуги для места.
+	// Идентификатор бронирования.
 	Id string `json:"id"`
 
 	// Идентификатор места.
@@ -93,7 +94,7 @@ type BookingCreateRequest struct {
 	UserProfileId string `json:"user_profile_id"`
 }
 
-// BookingList defines model for BookingList.
+// Список бронирований
 type BookingList []Booking
 
 // Статус бронирования.
@@ -177,7 +178,7 @@ type SeatOptionsList []SeatOption
 // SeatsList defines model for SeatsList.
 type SeatsList []Seat
 
-// Transaction defines model for Transaction.
+// Транзакция
 type Transaction struct {
 	// Сумма.
 	Amount float64 `json:"amount"`
@@ -189,7 +190,13 @@ type Transaction struct {
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 }
 
-// TransactionsList defines model for TransactionsList.
+// Тело запроса на создание транзакции
+type TransactionCreateRequest struct {
+	// Идентификатор бронирования.
+	BookingId string `json:"booking_id"`
+}
+
+// Список транзакций
 type TransactionsList []Transaction
 
 // UserProfile defines model for UserProfile.
@@ -207,8 +214,14 @@ type UserProfile struct {
 // CreateBookingJSONBody defines parameters for CreateBooking.
 type CreateBookingJSONBody BookingCreateRequest
 
+// CreateTransactionJSONBody defines parameters for CreateTransaction.
+type CreateTransactionJSONBody TransactionCreateRequest
+
 // CreateBookingJSONRequestBody defines body for CreateBooking for application/json ContentType.
 type CreateBookingJSONRequestBody CreateBookingJSONBody
+
+// CreateTransactionJSONRequestBody defines body for CreateTransaction for application/json ContentType.
+type CreateTransactionJSONRequestBody CreateTransactionJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -230,6 +243,9 @@ type ServerInterface interface {
 	// Получить список мест.
 	// (GET /v1/seats)
 	GetSeatsList(w http.ResponseWriter, r *http.Request)
+	// Получить место по id
+	// (GET /v1/seats/{seatId})
+	GetSeatById(w http.ResponseWriter, r *http.Request, seatId string)
 	// Получить список транзакций.
 	// (GET /v1/transactions)
 	GetTransactionsList(w http.ResponseWriter, r *http.Request)
@@ -331,6 +347,32 @@ func (siw *ServerInterfaceWrapper) GetSeatsList(w http.ResponseWriter, r *http.R
 
 	var handler = func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetSeatsList(w, r)
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler(w, r.WithContext(ctx))
+}
+
+// GetSeatById operation middleware
+func (siw *ServerInterfaceWrapper) GetSeatById(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var err error
+
+	// ------------- Path parameter "seatId" -------------
+	var seatId string
+
+	err = runtime.BindStyledParameter("simple", false, "seatId", chi.URLParam(r, "seatId"), &seatId)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "seatId", Err: err})
+		return
+	}
+
+	var handler = func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetSeatById(w, r, seatId)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -515,6 +557,9 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	})
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/v1/seats", wrapper.GetSeatsList)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/v1/seats/{seatId}", wrapper.GetSeatById)
 	})
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/v1/transactions", wrapper.GetTransactionsList)
