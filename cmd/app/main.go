@@ -62,10 +62,10 @@ func main() {
 
 	// инициализация сервисов
 	airportsService := airportsService.NewAirportsService(airportsStorage)
-	bookingService := bookingService.NewBookingService(bookingStorage, seatsStorage)
 	flightsService := flightsService.NewFlightsService(flightsStorage)
 	seatsService := seatsService.NewSeatsService(seatsStorage)
-	transactionsService := transactionsService.NewTransactionsService(transactionsStorage)
+	bookingService := bookingService.NewBookingService(bookingStorage, seatsService)
+	transactionsService := transactionsService.NewTransactionsService(transactionsStorage, bookingService, seatsService)
 
 	apiServer := v1.NewAPIServer(
 		airportsService,

@@ -11,20 +11,22 @@ import (
 type BookingService interface {
 	GetBookingList(context.Context) (booking.BookingList, error)
 	CreateBooking(ctx context.Context, seatId, userId string) (string, error)
+	GetBookingById(ctx context.Context, id string) (booking.Booking, error)
 }
 
 type BookingStorage interface {
 	GetBookingList(context.Context) (booking.BookingList, error)
 	CreateBooking(ctx context.Context, flightId, seatId, userId string) (string, error)
+	GetBookingById(ctx context.Context, id string) (booking.Booking, error)
 }
 
-type SeatStorage interface {
+type SeatService interface {
 	GetSeatById(ctx context.Context, id string) (seats.Seat, error)
 }
 
 type service struct {
 	bookingStorage BookingStorage
-	seatStorage    SeatStorage
+	seatService    SeatService
 }
 
 func (s service) GetBookingList(ctx context.Context) (booking.BookingList, error) {
@@ -32,7 +34,7 @@ func (s service) GetBookingList(ctx context.Context) (booking.BookingList, error
 }
 
 func (s service) CreateBooking(ctx context.Context, seatId, userId string) (string, error) {
-	seat, err := s.seatStorage.GetSeatById(ctx, seatId)
+	seat, err := s.seatService.GetSeatById(ctx, seatId)
 	if err != nil {
 		return "", err
 	}
@@ -49,12 +51,16 @@ func (s service) CreateBooking(ctx context.Context, seatId, userId string) (stri
 	return id, nil
 }
 
+func (s service) GetBookingById(ctx context.Context, id string) (booking.Booking, error) {
+	return s.bookingStorage.GetBookingById(ctx, id)
+}
+
 func NewBookingService(
 	bookingStorage BookingStorage,
-	seatStorage SeatStorage,
+	seatService SeatService,
 ) BookingService {
 	return &service{
 		bookingStorage: bookingStorage,
-		seatStorage:    seatStorage,
+		seatService:    seatService,
 	}
 }

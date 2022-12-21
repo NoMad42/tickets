@@ -2,21 +2,27 @@ package v1
 
 import (
 	"context"
+	"encoding/json"
+	"homework/specs"
 	"log"
 	"net/http"
-
-	"github.com/google/uuid"
 )
 
 func (a apiServer) CreateTransaction(w http.ResponseWriter, r *http.Request) {
-	newTransactionUuid, err := uuid.New().MarshalBinary()
+	var tcr specs.TransactionCreateRequest
+	err := json.NewDecoder(r.Body).Decode(&tcr)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("JSON decode error: ", err)
 	}
-	_, err = w.Write(newTransactionUuid)
+	defer r.Body.Close()
+
+	u, err := a.transactionsService.CreateTransaction(context.Background(), tcr.BookingId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return
 	}
+
+	a.writeSuccessResponse(u, w)
 }
 
 func (a apiServer) GetTransactionsList(w http.ResponseWriter, r *http.Request) {

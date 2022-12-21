@@ -12,6 +12,7 @@ import (
 
 type TransactionsStorage interface {
 	GetTransactionsList(context.Context) (transactions.TransactionsList, error)
+	CreateTransaction(ctx context.Context, amount float64, userProfileId string) (string, error)
 }
 
 type storage struct {
@@ -28,6 +29,34 @@ func (s storage) GetTransactionsList(ctx context.Context) (transactions.Transact
 	}
 
 	return a, err
+}
+
+func (s storage) CreateTransaction(ctx context.Context, amount float64, userProfileId string) (string, error) {
+	tx, err := s.dbp.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return "", err
+	}
+
+	defer tx.Rollback(context.Background())
+
+	lastInsertId := ""
+	err = tx.QueryRow(
+		ctx,
+		"INSERT INTO transactions (amount, user_profiles_id) VALUES($1, $2) RETURNING id",
+		amount,
+		userProfileId,
+	).Scan(&lastInsertId)
+
+	if err != nil {
+		return lastInsertId, err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	return lastInsertId, nil
 }
 
 func NewTransactionsStorage(

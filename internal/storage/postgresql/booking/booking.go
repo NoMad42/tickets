@@ -13,6 +13,7 @@ import (
 type BookingStorage interface {
 	GetBookingList(context.Context) (booking.BookingList, error)
 	CreateBooking(ctx context.Context, flightId, seatId, userId string) (string, error)
+	GetBookingById(ctx context.Context, id string) (booking.Booking, error)
 }
 
 type storage struct {
@@ -59,6 +60,18 @@ func (s storage) CreateBooking(ctx context.Context, flightId, seatId, userId str
 	}
 
 	return lastInsertId, nil
+}
+
+func (s storage) GetBookingById(ctx context.Context, id string) (booking.Booking, error) {
+	rows, _ := s.dbp.Query(context.Background(), "select * from booking where id = $1 limit 1", id)
+	defer rows.Close()
+
+	b, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[booking.Booking])
+	if err != nil {
+		log.Printf("CollectRows error: %v", err)
+	}
+
+	return b, err
 }
 
 func NewBookingStorage(

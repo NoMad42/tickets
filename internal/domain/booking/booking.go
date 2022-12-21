@@ -12,7 +12,7 @@ const (
 	BookingStatusFree BookingStatus = "free"
 )
 
-// Booking defines model for Booking.
+// Бронирование
 type Booking struct {
 	// Идентификатор рейса.
 	FlightId string `json:"flight_id" db:"flight_id"`
@@ -21,19 +21,19 @@ type Booking struct {
 	Id string `json:"id"`
 
 	// Идентификатор места.
-	SeatId string `json:"seat_id" db:"seat_id"`
+	SeatId string `json:"seat_id" db:"seats_id"`
 
 	// Идентификаторы услуг для места
 	SeatOptionsIds *[]string `json:"seat_options_ids,omitempty" db:"-"`
 
 	// Статус бронирования.
-	Status *BookingStatus `json:"status,omitempty" db:"-"`
+	Status *BookingStatus `json:"status,omitempty"`
 
 	// Идентификатор транзакции.
 	TransactionId *string `json:"transaction_id,omitempty" db:"transaction_id"`
 
 	// Идентификатор пользователя.
-	UserProfileId string `json:"user_profile_id" db:"user_profile_id"`
+	UserProfileId string `json:"user_profile_id" db:"user_profiles_id"`
 }
 
 // BookingList defines model for BookingList.

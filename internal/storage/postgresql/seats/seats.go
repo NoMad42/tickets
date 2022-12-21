@@ -36,12 +36,12 @@ func (s storage) GetSeatById(ctx context.Context, id string) (seats.Seat, error)
 	rows, _ := s.dbp.Query(context.Background(), "select * from seats where id = $1 limit 1", id)
 	defer rows.Close()
 
-	a, err := pgx.CollectRows(rows, pgx.RowToStructByName[seats.Seat])
+	seat, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[seats.Seat])
 	if err != nil {
 		log.Printf("CollectRows error: %v", err)
 	}
 
-	return a[0], err
+	return seat, err
 }
 
 func (s storage) GetSeatOptionsList(ctx context.Context) (seats.SeatOptionsList, error) {

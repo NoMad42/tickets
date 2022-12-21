@@ -9,11 +9,13 @@ import (
 type SeatsService interface {
 	GetSeatsList(context.Context) (seats.SeatsList, error)
 	GetSeatOptionsList(context.Context) (seats.SeatOptionsList, error)
+	GetSeatById(ctx context.Context, id string) (seats.Seat, error)
 }
 
 type SeatsStorage interface {
 	GetSeatsList(context.Context) (seats.SeatsList, error)
 	GetSeatOptionsList(context.Context) (seats.SeatOptionsList, error)
+	GetSeatById(ctx context.Context, id string) (seats.Seat, error)
 }
 
 type service struct {
@@ -26,6 +28,10 @@ func (s service) GetSeatsList(ctx context.Context) (seats.SeatsList, error) {
 
 func (s service) GetSeatOptionsList(ctx context.Context) (seats.SeatOptionsList, error) {
 	return s.seatsStorage.GetSeatOptionsList(ctx)
+}
+
+func (s service) GetSeatById(ctx context.Context, id string) (seats.Seat, error) {
+	return s.seatsStorage.GetSeatById(ctx, id)
 }
 
 func NewSeatsService(
