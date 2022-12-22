@@ -103,6 +103,7 @@ func startHTTPServer(
 	group, ctx := errgroup.WithContext(ctx)
 
 	group.Go(func() error {
+		log.Println("Старт сервера")
 		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			return err
 		}
@@ -111,6 +112,8 @@ func startHTTPServer(
 
 	group.Go(func() error {
 		<-ctx.Done()
+		log.Println("Выключение сервера")
+
 		return httpServer.Shutdown(ctx)
 	})
 
