@@ -10,12 +10,12 @@ import (
 )
 
 type TransactionsService interface {
-	GetTransactionsList(context.Context) (transactions.TransactionsList, error)
+	GetTransactionsList(context.Context) ([]transactions.Transaction, error)
 	CreateTransaction(ctx context.Context, bookingId string) (string, error)
 }
 
 type TransactionsStorage interface {
-	GetTransactionsList(context.Context) (transactions.TransactionsList, error)
+	GetTransactionsList(context.Context) ([]transactions.Transaction, error)
 	CreateTransaction(ctx context.Context, amount float64, userProfileId string) (string, error)
 }
 
@@ -33,7 +33,7 @@ type service struct {
 	seatService         SeatService
 }
 
-func (s service) GetTransactionsList(ctx context.Context) (transactions.TransactionsList, error) {
+func (s service) GetTransactionsList(ctx context.Context) ([]transactions.Transaction, error) {
 	return s.transactionsStorage.GetTransactionsList(ctx)
 }
 

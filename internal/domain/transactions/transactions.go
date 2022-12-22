@@ -2,7 +2,7 @@ package transactions
 
 import "time"
 
-// Transaction defines model for Transaction.
+// Транзакция
 type Transaction struct {
 	// Сумма.
 	Amount float64 `json:"amount"`
@@ -11,8 +11,8 @@ type Transaction struct {
 	Id string `json:"id"`
 
 	// Время оплаты.
-	Timestamp *time.Time `json:"timestamp,omitempty"`
-}
+	Timestamp *time.Time `json:"timestamp,omitempty" db:"created_at"`
 
-// TransactionsList defines model for TransactionsList.
-type TransactionsList []Transaction
+	// Идентификатор пользователя.
+	UserProfileId string `json:"user_profile_id" db:"user_profiles_id"`
+}

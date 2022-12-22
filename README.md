@@ -6,7 +6,6 @@
 
 - [ ] Add create transaction handler
 - [ ] Add approve transaction handler
-- [ ] Add approve transaction handler
 - [ ] Add booking status change handler
 - [ ] Add uniq key for booking (user + seat)
 - [ ] Add Ticket handler

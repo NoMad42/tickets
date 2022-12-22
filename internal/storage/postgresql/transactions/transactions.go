@@ -11,7 +11,7 @@ import (
 )
 
 type TransactionsStorage interface {
-	GetTransactionsList(context.Context) (transactions.TransactionsList, error)
+	GetTransactionsList(context.Context) ([]transactions.Transaction, error)
 	CreateTransaction(ctx context.Context, amount float64, userProfileId string) (string, error)
 }
 
@@ -19,7 +19,7 @@ type storage struct {
 	dbp *pgxpool.Pool
 }
 
-func (s storage) GetTransactionsList(ctx context.Context) (transactions.TransactionsList, error) {
+func (s storage) GetTransactionsList(ctx context.Context) ([]transactions.Transaction, error) {
 	rows, _ := s.dbp.Query(context.Background(), "select * from transactions limit 100")
 	defer rows.Close()
 
