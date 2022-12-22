@@ -4,13 +4,12 @@
 
 ## Road map
 
-- [ ] Add create transaction handler
-- [ ] Add approve transaction handler
-- [ ] Add booking status change handler
-- [ ] Add uniq key for booking (user + seat)
-- [ ] Add Ticket handler
-- [ ] Add cache for Ticket handler
-- [ ] Add seat options handlers
-- [ ] Add users handler
-- [ ] One / many fix. 's' fix
-- [ ] Replace `string` id to `UUID` id
+- [х] Добавить обработку транзакций
+- [ ] Добавить обработчик обновления статуса бронирования. Горотину? Очередь?
+- [ ] Добавить уникальный ключ для бранирования (пользователь + место)
+- [ ] Добавить обработчик билетов. Отдавать текст файл.
+- [ ] Добавить кеширование билетов в файл.
+- [ ] Добавить обработку опций мест. Возможно имеет смысл переименовать этот функционал =)
+- [ ] Добавить обработку пользователей
+- [ ] Исправить множественные окончания. `s` фикс.
+- [ ] Заменить тип `string` id на `UUID` id
