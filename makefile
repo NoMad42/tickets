@@ -26,8 +26,8 @@ gen-api:
 lint: 
 	golangci-lint run
 
-test:
-	go test -v main.go
+# test:
+# 	go test -v main.go
  
 run:
 	cd cmd/app \
@@ -56,3 +56,6 @@ migrate-fresh:
 	make migrate-up
 
 mig-f: migrate-fresh
+
+psql:
+	docker exec -it dive-into-go-db psql "${DB_URL}"

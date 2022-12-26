@@ -9,15 +9,17 @@ import (
 )
 
 type BookingService interface {
-	GetBookingList(context.Context) (booking.BookingList, error)
+	GetBookingList(context.Context) ([]booking.Booking, error)
 	CreateBooking(ctx context.Context, seatId, userId string) (string, error)
 	GetBookingById(ctx context.Context, id string) (booking.Booking, error)
+	Approve(ctx context.Context, bookingId, transactionId string) error
 }
 
 type BookingStorage interface {
-	GetBookingList(context.Context) (booking.BookingList, error)
+	GetBookingList(context.Context) ([]booking.Booking, error)
 	CreateBooking(ctx context.Context, flightId, seatId, userId string) (string, error)
 	GetBookingById(ctx context.Context, id string) (booking.Booking, error)
+	Approve(ctx context.Context, bookingId, transactionId string) error
 }
 
 type SeatService interface {
@@ -29,7 +31,7 @@ type service struct {
 	seatService    SeatService
 }
 
-func (s service) GetBookingList(ctx context.Context) (booking.BookingList, error) {
+func (s service) GetBookingList(ctx context.Context) ([]booking.Booking, error) {
 	return s.bookingStorage.GetBookingList(ctx)
 }
 
@@ -53,6 +55,10 @@ func (s service) CreateBooking(ctx context.Context, seatId, userId string) (stri
 
 func (s service) GetBookingById(ctx context.Context, id string) (booking.Booking, error) {
 	return s.bookingStorage.GetBookingById(ctx, id)
+}
+
+func (s service) Approve(ctx context.Context, bookingId, transactionId string) error {
+	return s.bookingStorage.Approve(ctx, bookingId, transactionId)
 }
 
 func NewBookingService(

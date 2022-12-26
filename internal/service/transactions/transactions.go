@@ -21,6 +21,7 @@ type TransactionsStorage interface {
 
 type BookingService interface {
 	GetBookingById(ctx context.Context, id string) (booking.Booking, error)
+	Approve(ctx context.Context, bookingId, transactionId string) error
 }
 
 type SeatService interface {
@@ -54,6 +55,11 @@ func (s service) CreateTransaction(ctx context.Context, bookingId string) (strin
 	log.Println(seat.Price, b.UserProfileId)
 	// TODO add calc for seat options
 	id, err := s.transactionsStorage.CreateTransaction(ctx, seat.Price, b.UserProfileId)
+	if err != nil {
+		return "", err
+	}
+
+	err = s.bookingService.Approve(ctx, b.Id, id)
 	if err != nil {
 		return "", err
 	}

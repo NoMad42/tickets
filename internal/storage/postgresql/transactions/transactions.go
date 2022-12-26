@@ -2,10 +2,12 @@ package transactions
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"homework/internal/domain/transactions"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -39,16 +41,22 @@ func (s storage) CreateTransaction(ctx context.Context, amount float64, userProf
 
 	defer tx.Rollback(context.Background())
 
-	lastInsertId := ""
-	err = tx.QueryRow(
+	transactionId := uuid.New()
+	ct, err := tx.Exec(
 		ctx,
-		"INSERT INTO transactions (amount, user_profiles_id) VALUES($1, $2) RETURNING id",
+		"INSERT INTO transactions (id, amount, user_profiles_id) VALUES($1, $2, $3)",
+		transactionId,
 		amount,
 		userProfileId,
-	).Scan(&lastInsertId)
-
+	)
 	if err != nil {
-		return lastInsertId, err
+		return "", err
+	}
+	if ct.RowsAffected() != 1 {
+		return "", fmt.Errorf(
+			"transaction storage error: при добавлении количество затронутых строк не равно 1. затронутых строк %d",
+			ct.RowsAffected(),
+		)
 	}
 
 	err = tx.Commit(ctx)
@@ -56,7 +64,7 @@ func (s storage) CreateTransaction(ctx context.Context, amount float64, userProf
 		return "", err
 	}
 
-	return lastInsertId, nil
+	return transactionId.String(), nil
 }
 
 func NewTransactionsStorage(

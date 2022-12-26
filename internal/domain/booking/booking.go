@@ -35,6 +35,3 @@ type Booking struct {
 	// Идентификатор пользователя.
 	UserProfileId string `json:"user_profile_id" db:"user_profiles_id"`
 }
-
-// BookingList defines model for BookingList.
-type BookingList []Booking
