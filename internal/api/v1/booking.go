@@ -12,7 +12,7 @@ func (a apiServer) CreateBooking(w http.ResponseWriter, r *http.Request) {
 	var bcr specs.BookingCreateRequest
 	err := json.NewDecoder(r.Body).Decode(&bcr)
 	if err != nil {
-		log.Fatal("JSON decode error: ", err)
+		log.Println("JSON decode error: ", err)
 	}
 	defer r.Body.Close()
 

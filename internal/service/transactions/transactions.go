@@ -39,10 +39,8 @@ func (s service) GetTransactionsList(ctx context.Context) ([]transactions.Transa
 }
 
 func (s service) CreateTransaction(ctx context.Context, bookingId string) (string, error) {
-	log.Println(bookingId)
 	b, err := s.bookingService.GetBookingById(ctx, bookingId)
 	if err != nil {
-		log.Println("problem is here")
 		return "", err
 	}
 	log.Println(b)

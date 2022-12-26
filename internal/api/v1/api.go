@@ -45,6 +45,6 @@ func (a *apiServer) writeSuccessResponse(result any, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
 
 	if err := json.NewEncoder(w).Encode(result); err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }

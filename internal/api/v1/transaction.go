@@ -12,7 +12,7 @@ func (a apiServer) CreateTransaction(w http.ResponseWriter, r *http.Request) {
 	var tcr specs.TransactionCreateRequest
 	err := json.NewDecoder(r.Body).Decode(&tcr)
 	if err != nil {
-		log.Fatal("JSON decode error: ", err)
+		log.Println("JSON decode error: ", err)
 	}
 	defer r.Body.Close()
 
