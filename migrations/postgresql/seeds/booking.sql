@@ -23,4 +23,3 @@ INSERT INTO booking (
     booking_status
     FROM seats 
     WHERE booking_status = 'booking';
-    
