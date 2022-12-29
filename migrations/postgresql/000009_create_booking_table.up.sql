@@ -4,5 +4,6 @@ CREATE TABLE booking (
     seats_id uuid REFERENCES seats,
     transaction_id uuid REFERENCES transactions,
     user_profiles_id uuid REFERENCES user_profiles,
-    status booking_status DEFAULT 'free'
+    status booking_status DEFAULT 'free',
+    UNIQUE (user_profiles_id, seats_id)
 );
