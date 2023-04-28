@@ -1,0 +1,12 @@
+{
+    "tasks": {
+        "vars": {
+            "binaryDir": "cmd/app",
+            "binaryName": "main",
+            "dbUrl": "postgres://root:pass@localhost:5432/digdb?sslmode=disable",
+            "windows": {
+                "binaryName": "main.exe"
+            }
+        }
+    }
+}
