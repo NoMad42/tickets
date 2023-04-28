@@ -2,6 +2,14 @@
 
 Пример API написанном на языка Go.
 
+## Установа
+
+### Пкет для работы с миграциями базы данных
+
+```shell
+go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+```
+
 ## Road map
 
 ### Main
