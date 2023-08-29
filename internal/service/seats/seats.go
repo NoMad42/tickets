@@ -4,18 +4,20 @@ import (
 	"context"
 
 	"homework/internal/domain/seats"
+
+	"github.com/google/uuid"
 )
 
 type SeatsService interface {
 	GetSeatsList(context.Context) (seats.SeatsList, error)
 	GetSeatOptionsList(context.Context) (seats.SeatOptionsList, error)
-	GetSeatById(ctx context.Context, id string) (seats.Seat, error)
+	GetSeatById(ctx context.Context, id uuid.UUID) (seats.Seat, error)
 }
 
 type SeatsStorage interface {
 	GetSeatsList(context.Context) (seats.SeatsList, error)
 	GetSeatOptionsList(context.Context) (seats.SeatOptionsList, error)
-	GetSeatById(ctx context.Context, id string) (seats.Seat, error)
+	GetSeatById(ctx context.Context, id uuid.UUID) (seats.Seat, error)
 }
 
 type service struct {
@@ -30,7 +32,7 @@ func (s service) GetSeatOptionsList(ctx context.Context) (seats.SeatOptionsList,
 	return s.seatsStorage.GetSeatOptionsList(ctx)
 }
 
-func (s service) GetSeatById(ctx context.Context, id string) (seats.Seat, error) {
+func (s service) GetSeatById(ctx context.Context, id uuid.UUID) (seats.Seat, error) {
 	return s.seatsStorage.GetSeatById(ctx, id)
 }
 

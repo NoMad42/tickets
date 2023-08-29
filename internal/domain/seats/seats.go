@@ -1,70 +1,71 @@
 package seats
 
-import "homework/internal/domain/booking"
+import (
+	"homework/internal/domain/booking"
+
+	"github.com/google/uuid"
+)
 
 // Defines values for SeatPosition.
 const (
-	SeatPositionAisle SeatPosition = "aisle"
-
-	SeatPositionMiddle SeatPosition = "middle"
-
-	SeatPositionWindow SeatPosition = "window"
+	Aisle  SeatPosition = "aisle"
+	Middle SeatPosition = "middle"
+	Window SeatPosition = "window"
 )
 
 // Defines values for SeatType.
 const (
-	SeatTypeBuisness SeatType = "buisness"
-
-	SeatTypeEconomy SeatType = "economy"
+	Buisness SeatType = "buisness"
+	Economy  SeatType = "economy"
 )
 
 // Seat defines model for Seat.
 type Seat struct {
-	// Статус бронирования.
+	// BookingStatus Статус бронирования.
 	BookingStatus booking.BookingStatus `json:"booking_status" db:"booking_status"`
 
-	// Код места.
+	// Code Код места.
 	Code string `json:"code"`
 
-	// Идентификатор рейса.
-	FlightId *string `json:"flight_id,omitempty" db:"flight_id"`
+	// FlightId Идентификатор рейса.
+	FlightId uuid.UUID `json:"flight_id" db:"flight_id"`
 
-	// Идентификатор места.
-	Id string `json:"id"`
+	// Id Идентификатор места.
+	Id uuid.UUID `json:"id"`
 
-	// Место места.
+	// Position Место места.
 	Position SeatPosition `json:"position"`
 
-	// Цена места.
+	// Price Цена места.
 	Price float64 `json:"price"`
 
-	// Тип места.
+	// Type Тип места.
 	Type SeatType `json:"type" db:"seat_type"`
 }
 
-// Место места.
+// SeatPosition Место места.
 type SeatPosition string
 
-// Тип места.
+// SeatType Тип места.
 type SeatType string
 
 // SeatOption defines model for SeatOption.
 type SeatOption struct {
-	// Описание услуги для места.
+	// Description Описание услуги для места.
 	Description *string `json:"description,omitempty"`
 
-	// Идентификатор услуги для места.
-	Id string `json:"id"`
+	// Id Идентификатор услуги для места.
+	Id uuid.UUID `json:"id"`
 
-	// Название услуги для места.
+	// Name Название услуги для места.
 	Name string `json:"name"`
 
-	// Цена места.
+	// Price Цена места.
 	Price float64 `json:"price"`
 }
 
 // SeatOptionsList defines model for SeatOptionsList.
-type SeatOptionsList []SeatOption
+type SeatOptionsList = []SeatOption
 
 // SeatsList defines model for SeatsList.
-type SeatsList []Seat
+type SeatsList = []Seat
