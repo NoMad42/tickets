@@ -6,24 +6,26 @@ import (
 
 	"homework/internal/domain/booking"
 	"homework/internal/domain/seats"
+
+	"github.com/google/uuid"
 )
 
 type BookingService interface {
 	GetBookingList(context.Context) ([]booking.Booking, error)
-	CreateBooking(ctx context.Context, seatId, userId string) (string, error)
-	GetBookingById(ctx context.Context, id string) (booking.Booking, error)
-	Approve(ctx context.Context, bookingId, transactionId string) error
+	CreateBooking(ctx context.Context, seatId, userId uuid.UUID) (uuid.UUID, error)
+	GetBookingById(ctx context.Context, id uuid.UUID) (booking.Booking, error)
+	Approve(ctx context.Context, bookingId, transactionId uuid.UUID) error
 }
 
 type BookingStorage interface {
 	GetBookingList(context.Context) ([]booking.Booking, error)
-	CreateBooking(ctx context.Context, flightId, seatId, userId string) (string, error)
-	GetBookingById(ctx context.Context, id string) (booking.Booking, error)
-	Approve(ctx context.Context, bookingId, transactionId string) error
+	CreateBooking(ctx context.Context, flightId, seatId, userId uuid.UUID) (uuid.UUID, error)
+	GetBookingById(ctx context.Context, id uuid.UUID) (booking.Booking, error)
+	Approve(ctx context.Context, bookingId, transactionId uuid.UUID) error
 }
 
 type SeatService interface {
-	GetSeatById(ctx context.Context, id string) (seats.Seat, error)
+	GetSeatById(ctx context.Context, id uuid.UUID) (seats.Seat, error)
 }
 
 type service struct {
@@ -35,29 +37,29 @@ func (s service) GetBookingList(ctx context.Context) ([]booking.Booking, error) 
 	return s.bookingStorage.GetBookingList(ctx)
 }
 
-func (s service) CreateBooking(ctx context.Context, seatId, userId string) (string, error) {
+func (s service) CreateBooking(ctx context.Context, seatId, userId uuid.UUID) (uuid.UUID, error) {
 	seat, err := s.seatService.GetSeatById(ctx, seatId)
 	if err != nil {
-		return "", err
+		return uuid.Nil, err
 	}
 
-	if seat.FlightId == nil {
-		return "", errors.New("seat flight id is missing")
+	if seat.FlightId == uuid.Nil {
+		return uuid.Nil, errors.New("seat flight id is missing")
 	}
 
-	id, err := s.bookingStorage.CreateBooking(ctx, *seat.FlightId, seat.Id, userId)
+	id, err := s.bookingStorage.CreateBooking(ctx, seat.FlightId, seat.Id, userId)
 	if err != nil {
-		return "", err
+		return uuid.Nil, err
 	}
 
 	return id, nil
 }
 
-func (s service) GetBookingById(ctx context.Context, id string) (booking.Booking, error) {
+func (s service) GetBookingById(ctx context.Context, id uuid.UUID) (booking.Booking, error) {
 	return s.bookingStorage.GetBookingById(ctx, id)
 }
 
-func (s service) Approve(ctx context.Context, bookingId, transactionId string) error {
+func (s service) Approve(ctx context.Context, bookingId, transactionId uuid.UUID) error {
 	return s.bookingStorage.Approve(ctx, bookingId, transactionId)
 }
 

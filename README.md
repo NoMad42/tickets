@@ -21,10 +21,8 @@ go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@lat
 - [ ] Добавить кеширование билетов в файл.
 - [ ] Добавить обработку опций мест. Возможно имеет смысл переименовать этот функционал =)
 - [ ] Добавить обработку пользователей
-- [ ] Исправить множественные окончания. `s` фикс.
-- [ ] Заменить тип `string` id на `UUID` id
-- [ ] Стандартизировать ошибки. Попробовать кастомные ошибки с интерфейсом `Error(): string`.
-- [ ] Добавить более сложное логирование. Например [zap](https://pkg.go.dev/go.uber.org/zap#example-package-Presets)
+- [x] Заменить тип `string` id на `UUID` id
+- [ ] Добавить более сложное логирование. Например [slog](https://pkg.go.dev/log/slog)
 - [ ] Добавить метрики. Prometheus?
 - [ ] Добавить трассировку. [OpenTracing](https://opentracing.io/docs/) есть в примере, так что лучше начать с него.
 
@@ -36,3 +34,5 @@ go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@lat
 ### Super extra
 
 - [ ] Тесты
+- [ ] Исправить множественные окончания. `s` фикс.
+- [ ] Стандартизировать ошибки. Попробовать кастомные ошибки с интерфейсом `Error(): string`.

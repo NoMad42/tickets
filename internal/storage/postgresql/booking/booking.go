@@ -7,15 +7,16 @@ import (
 
 	"homework/internal/domain/booking"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type BookingStorage interface {
 	GetBookingList(context.Context) ([]booking.Booking, error)
-	CreateBooking(ctx context.Context, flightId, seatId, userId string) (string, error)
-	GetBookingById(ctx context.Context, id string) (booking.Booking, error)
-	Approve(ctx context.Context, bookingId, transactionId string) error
+	CreateBooking(ctx context.Context, flightId, seatId, userId uuid.UUID) (uuid.UUID, error)
+	GetBookingById(ctx context.Context, id uuid.UUID) (booking.Booking, error)
+	Approve(ctx context.Context, bookingId, transactionId uuid.UUID) error
 }
 
 type storage struct {
@@ -34,15 +35,15 @@ func (s storage) GetBookingList(ctx context.Context) ([]booking.Booking, error) 
 	return a, err
 }
 
-func (s storage) CreateBooking(ctx context.Context, flightId, seatId, userId string) (string, error) {
+func (s storage) CreateBooking(ctx context.Context, flightId, seatId, userId uuid.UUID) (uuid.UUID, error) {
 	tx, err := s.dbp.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
-		return "", err
+		return uuid.Nil, err
 	}
 
 	defer tx.Rollback(context.Background())
 
-	lastInsertId := ""
+	lastInsertId := uuid.New()
 	err = tx.QueryRow(
 		ctx,
 		"INSERT INTO booking (flight_id, seats_id, user_profiles_id, status) VALUES($1, $2, $3, $4) RETURNING id",
@@ -53,18 +54,18 @@ func (s storage) CreateBooking(ctx context.Context, flightId, seatId, userId str
 	).Scan(&lastInsertId)
 
 	if err != nil {
-		return lastInsertId, err
+		return uuid.Nil, err
 	}
 
 	err = tx.Commit(ctx)
 	if err != nil {
-		return "", err
+		return uuid.Nil, err
 	}
 
 	return lastInsertId, nil
 }
 
-func (s storage) GetBookingById(ctx context.Context, id string) (booking.Booking, error) {
+func (s storage) GetBookingById(ctx context.Context, id uuid.UUID) (booking.Booking, error) {
 	b := booking.Booking{}
 	err := s.dbp.QueryRow(
 		context.Background(),
@@ -85,7 +86,7 @@ func (s storage) GetBookingById(ctx context.Context, id string) (booking.Booking
 	return b, err
 }
 
-func (s storage) Approve(ctx context.Context, bookingId, transactionId string) error {
+func (s storage) Approve(ctx context.Context, bookingId, transactionId uuid.UUID) error {
 	tx, err := s.dbp.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
 		return err

@@ -1,25 +1,27 @@
 package airports
 
+import "github.com/google/uuid"
+
 // Airport defines model for Airport.
 type Airport struct {
-	// Город аэропорта.
+	// City Город аэропорта.
 	City string `json:"city"`
 
-	// Код аэропорта.
+	// Code Код аэропорта.
 	Code string `json:"code"`
 
-	// Страна аэропорта.
+	// Country Страна аэропорта.
 	Country string `json:"country"`
 
-	// Описание аэропорта.
+	// Description Описание аэропорта.
 	Description *string `json:"description,omitempty"`
 
-	// Идентификатор аэропорта.
-	Id string `json:"id"`
+	// Id Идентификатор аэропорта.
+	Id uuid.UUID `json:"id"`
 
-	// Название аэропорта.
+	// Name Название аэропорта.
 	Name string `json:"name"`
 }
 
 // AirportsList defines model for AirportsList.
-type AirportsList []Airport
+type AirportsList = []Airport

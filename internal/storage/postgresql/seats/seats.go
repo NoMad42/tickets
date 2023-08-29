@@ -6,13 +6,14 @@ import (
 
 	"homework/internal/domain/seats"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type SeatsStorage interface {
 	GetSeatsList(context.Context) (seats.SeatsList, error)
-	GetSeatById(ctx context.Context, id string) (seats.Seat, error)
+	GetSeatById(ctx context.Context, id uuid.UUID) (seats.Seat, error)
 	GetSeatOptionsList(context.Context) (seats.SeatOptionsList, error)
 }
 
@@ -32,7 +33,7 @@ func (s storage) GetSeatsList(ctx context.Context) (seats.SeatsList, error) {
 	return a, err
 }
 
-func (s storage) GetSeatById(ctx context.Context, id string) (seats.Seat, error) {
+func (s storage) GetSeatById(ctx context.Context, id uuid.UUID) (seats.Seat, error) {
 	rows, _ := s.dbp.Query(context.Background(), "select * from seats where id = $1 limit 1", id)
 	defer rows.Close()
 

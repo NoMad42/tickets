@@ -14,7 +14,7 @@ import (
 
 type TransactionsStorage interface {
 	GetTransactionsList(context.Context) ([]transactions.Transaction, error)
-	CreateTransaction(ctx context.Context, amount float64, userProfileId string) (string, error)
+	CreateTransaction(ctx context.Context, amount float64, userProfileId uuid.UUID) (uuid.UUID, error)
 }
 
 type storage struct {
@@ -33,10 +33,10 @@ func (s storage) GetTransactionsList(ctx context.Context) ([]transactions.Transa
 	return a, err
 }
 
-func (s storage) CreateTransaction(ctx context.Context, amount float64, userProfileId string) (string, error) {
+func (s storage) CreateTransaction(ctx context.Context, amount float64, userProfileId uuid.UUID) (uuid.UUID, error) {
 	tx, err := s.dbp.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
-		return "", err
+		return uuid.Nil, err
 	}
 
 	defer tx.Rollback(context.Background())
@@ -50,10 +50,10 @@ func (s storage) CreateTransaction(ctx context.Context, amount float64, userProf
 		userProfileId,
 	)
 	if err != nil {
-		return "", err
+		return uuid.Nil, err
 	}
 	if ct.RowsAffected() != 1 {
-		return "", fmt.Errorf(
+		return uuid.Nil, fmt.Errorf(
 			"transaction storage error: при добавлении количество затронутых строк не равно 1. затронутых строк %d",
 			ct.RowsAffected(),
 		)
@@ -61,10 +61,10 @@ func (s storage) CreateTransaction(ctx context.Context, amount float64, userProf
 
 	err = tx.Commit(ctx)
 	if err != nil {
-		return "", err
+		return uuid.Nil, err
 	}
 
-	return transactionId.String(), nil
+	return transactionId, nil
 }
 
 func NewTransactionsStorage(

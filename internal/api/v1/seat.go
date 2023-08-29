@@ -3,6 +3,8 @@ package v1
 import (
 	"context"
 	"net/http"
+
+	"github.com/google/uuid"
 )
 
 func (a apiServer) GetSeatsList(w http.ResponseWriter, r *http.Request) {
@@ -10,7 +12,7 @@ func (a apiServer) GetSeatsList(w http.ResponseWriter, r *http.Request) {
 	a.writeSuccessResponse(s, w)
 }
 
-func (a apiServer) GetSeatById(w http.ResponseWriter, r *http.Request, seatId string) {
+func (a apiServer) GetSeatById(w http.ResponseWriter, r *http.Request, seatId uuid.UUID) {
 	s, err := a.seatsService.GetSeatById(context.Background(), seatId)
 	if err != nil {
 		http.Error(w, http.StatusText(404), 404)

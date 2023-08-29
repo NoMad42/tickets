@@ -2,29 +2,32 @@ package flights
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
+// Flight defines model for Flight.
 type Flight struct {
-	// Код рейса.
+	// Code Код рейса.
 	Code string `json:"code"`
 
-	// Время вылета.
+	// From Время вылета.
 	From time.Time `json:"from" db:"from_timestamp"`
 
-	// Идентификатор аэропорта вылета.
-	FromAirportId string `json:"from_airport_id" db:"from_airport_id"`
+	// FromAirportId Идентификатор аэропорта вылета.
+	FromAirportId uuid.UUID `json:"from_airport_id" db:"from_airport_id"`
 
-	// Идентификатор рейса.
-	Id string `json:"id"`
+	// Id Идентификатор рейса.
+	Id uuid.UUID `json:"id"`
 
-	// Статус.
+	// Status Статус.
 	Status string `json:"status"`
 
-	// Время прилёта.
-	To time.Time `json:"to" db:"to_timestamp"`
+	// To Время прилёта.
+	To time.Time `json:"to"`
 
-	// Идентификатор аэропорта прилёта.
-	ToAirportId string `json:"to_airport_id" db:"to_airport_id"`
+	// ToAirportId Идентификатор аэропорта прилёта.
+	ToAirportId uuid.UUID `json:"to_airport_id" db:"to_airport_id"`
 }
 
 // FlightsList defines model for FlightsList.

@@ -11,7 +11,7 @@ import (
 func (a apiServer) GetAuthUser(w http.ResponseWriter, r *http.Request) {
 	user := &specs.UserProfile{
 		AvatarUrl: "https://example.com/avatar.jpg",
-		Id:        uuid.New().String(),
+		Id:        uuid.New(),
 		Login:     "admin",
 	}
 

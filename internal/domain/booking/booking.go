@@ -1,37 +1,37 @@
 package booking
 
-// Статус бронирования.
+import "github.com/google/uuid"
+
+// BookingStatus Статус бронирования.
 type BookingStatus string
 
 // Defines values for BookingStatus.
 const (
-	BookingStatusBooked BookingStatus = "booked"
-
+	BookingStatusBooked  BookingStatus = "booked"
 	BookingStatusBooking BookingStatus = "booking"
-
-	BookingStatusFree BookingStatus = "free"
+	BookingStatusFree    BookingStatus = "free"
 )
 
-// Бронирование
+// Booking Бронирование
 type Booking struct {
-	// Идентификатор рейса.
-	FlightId string `json:"flight_id" db:"flight_id"`
+	// FlightId Идентификатор рейса.
+	FlightId uuid.UUID `json:"flight_id"`
 
-	// Идентификатор услуги для места.
-	Id string `json:"id"`
+	// Id Идентификатор бронирования.
+	Id uuid.UUID `json:"id"`
 
-	// Идентификатор места.
-	SeatId string `json:"seat_id" db:"seats_id"`
+	// SeatId Идентификатор места.
+	SeatId uuid.UUID `json:"seat_id"`
 
-	// Идентификаторы услуг для места
-	SeatOptionsIds *[]string `json:"seat_options_ids,omitempty" db:"-"`
+	// SeatOptionsIds Идентификаторы услуг для места
+	SeatOptionsIds *[]uuid.UUID `json:"seat_options_ids,omitempty"`
 
-	// Статус бронирования.
-	Status *BookingStatus `json:"status,omitempty"`
+	// Status Статус бронирования.
+	Status BookingStatus `json:"status"`
 
-	// Идентификатор транзакции.
-	TransactionId *string `json:"transaction_id,omitempty" db:"transaction_id"`
+	// TransactionId Идентификатор транзакции.
+	TransactionId *uuid.UUID `json:"transaction_id,omitempty"`
 
-	// Идентификатор пользователя.
-	UserProfileId string `json:"user_profile_id" db:"user_profiles_id"`
+	// UserProfileId Идентификатор пользователя.
+	UserProfileId uuid.UUID `json:"user_profile_id"`
 }
